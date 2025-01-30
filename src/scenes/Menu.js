@@ -5,7 +5,8 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-      
+        this.load.image('cow', './assets/cow.png')
+        this.load.image('background', './assets/background.png')
         // load audio
         this.load.audio('sfx-select', './assets/sfx-select.wav')
     }
