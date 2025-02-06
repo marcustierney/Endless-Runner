@@ -1,11 +1,23 @@
 let config = {
     type: Phaser.AUTO,
-    width: 640,
-    height: 480,
+    width: 800,
+    height: 800,
+    render: {
+      pixelArt: true
+    },
+    physics: {
+      default: 'arcade',
+      arcade: {
+          debug: true,
+      } 
+    },
     scene: [ Menu, Play ]
   }
 
 let game = new Phaser.Game(config)
+
+let cursors
+let { height, width } = game.config
 
 // set UI sizes
 let borderUISize = game.config.height / 15
