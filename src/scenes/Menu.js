@@ -5,7 +5,6 @@ class Menu extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('cow', './assets/cow.png')
         this.load.image('background', './assets/background.png')
         this.load.spritesheet('character', './assets/Character_002.png', {
             frameWidth: 48

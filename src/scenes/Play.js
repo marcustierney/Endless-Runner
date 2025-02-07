@@ -5,17 +5,13 @@ class Play extends Phaser.Scene {
 
     init() {
         this.PLAYER_VELOCITY = 350
+        this.BALL_SPEED = 200;
     }
 
     create() {
-            // place tile sprite
+            // Place tile sprite
             this.background = this.add.tileSprite(0, 0, 800, 800, 'background').setOrigin(0, 0)
-            // white borders
-            this.add.rectangle(0, 0, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-            this.add.rectangle(0, game.config.height - borderUISize, game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0)
-            this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-            this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0)
-            //add normalized sprite movement
+            //Add normalized sprite movement
             this.player = this.physics.add.sprite(width / 2, height / 2, 'character', 1).setScale(2)
             this.player.body.setCollideWorldBounds(true)
             this.player.body.setSize(32, 32).setOffset(8, 16)
@@ -71,10 +67,52 @@ class Play extends Phaser.Scene {
             })
     
             cursors = this.input.keyboard.createCursorKeys()
+
+            this.balls = this.physics.add.group();
+            this.time.addEvent({ delay: 1000, callback: this.spawnBall, callbackScope: this, loop: true });
+            //If player touches ball
+            this.physics.add.overlap(this.player, this.balls, this.gameOver, null, this); 
+    }
+
+    spawnBall() {
+        let edge = Phaser.Math.Between(0, 3); //random edge of the screen
+        let x, y, velocityX, velocityY;
+
+        switch (edge) {
+            case 0: // Top edge
+                x = Phaser.Math.Between(0, width);
+                y = 0;
+                velocityX = 0;
+                velocityY = this.BALL_SPEED;
+                break;
+            case 1: // Bottom edge
+                x = Phaser.Math.Between(0, width);
+                y = height;
+                velocityX = 0;
+                velocityY = -this.BALL_SPEED;
+                break;
+            case 2: // Left edge
+                x = 0;
+                y = Phaser.Math.Between(0, height);
+                velocityX = this.BALL_SPEED;
+                velocityY = 0;
+                break;
+            case 3: // Right edge
+                x = width;
+                y = Phaser.Math.Between(0, height);
+                velocityX = -this.BALL_SPEED;
+                velocityY = 0;
+                break;
+        }
+
+        let ball = this.balls.create(x, y, 'ball');
+        ball.setVelocity(velocityX, velocityY);
+        ball.setCollideWorldBounds(false);
+        ball.setScale(1.5);
     }
 
 
-    update() {
+    update() { //Continuous movement
         let playerVector = new Phaser.Math.Vector2(0, 0)
         // Check for input and update last direction
         if (cursors.left.isDown) {
@@ -97,7 +135,7 @@ class Play extends Phaser.Scene {
         playerVector.normalize()
         
         // If no input, continue moving in last direction
-        if (playerVector.length() === 0) {
+        if (playerVector.length() == 0) { 
             switch (this.lastDirection) {
                 case 'left':
                     playerVector.x = -1;
@@ -118,8 +156,18 @@ class Play extends Phaser.Scene {
         // Determine movement state
         let playerMovement = 'walk'; // Always walking
         this.player.play(playerMovement + '-' + this.lastDirection, true);
+
+        this.balls.children.iterate((ball) => {
+            if (ball && ball.active) {  // Ensure ball exists before accessing properties
+                if (ball.x < -50 || ball.x > this.scale.width + 50 || ball.y < -50 || ball.y > this.scale.height + 50) {
+                    ball.destroy();
+                }
+            }
+        });
     }
-        
+
+    gameOver() {
+        this.scene.restart();
+    }    
 }
 
-//make up, down, left, right continous movement 
