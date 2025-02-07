@@ -78,39 +78,79 @@ class Play extends Phaser.Scene {
 
     spawnBall() {
         let edge = Phaser.Math.Between(0, 3); //random edge of the screen
-        let x, y, velocityX, velocityY;
+        let x, y, velocityX, velocityY, ballType;
 
-        switch (edge) {
-            case 0: // Top edge
-                x = Phaser.Math.Between(0, width);
-                y = 0;
-                velocityX = 0;
-                velocityY = this.BALL_SPEED;
-                break;
-            case 1: // Bottom edge
-                x = Phaser.Math.Between(0, width);
-                y = height;
-                velocityX = 0;
-                velocityY = -this.BALL_SPEED;
-                break;
-            case 2: // Left edge
-                x = 0;
-                y = Phaser.Math.Between(0, height);
-                velocityX = this.BALL_SPEED;
-                velocityY = 0;
-                break;
-            case 3: // Right edge
-                x = width;
-                y = Phaser.Math.Between(0, height);
-                velocityX = -this.BALL_SPEED;
-                velocityY = 0;
-                break;
+        let isDiagonal = Phaser.Math.Between(0, 3) === 0; // 25% chance of diagonal movement
+        if (isDiagonal) {
+            // Diagonal ball movement
+            let diagonalDirection = Phaser.Math.Between(0, 3); // Random diagonal direction
+            switch (diagonalDirection) {
+                case 0: // Top-left
+                    x = width;
+                    y = height;
+                    velocityX = -this.BALL_SPEED;
+                    velocityY = -this.BALL_SPEED;
+                    ballType = 'ball-diagonal'; // Diagonal ball asset
+                    break;
+                case 1: // Top-right
+                    x = 0;
+                    y = height;
+                    velocityX = this.BALL_SPEED;
+                    velocityY = -this.BALL_SPEED;
+                    ballType = 'ball-diagonal'; // Diagonal ball asset
+                    break;
+                case 2: // Bottom-left
+                    x = width;
+                    y = 0;
+                    velocityX = -this.BALL_SPEED;
+                    velocityY = this.BALL_SPEED;
+                    ballType = 'ball-diagonal'; // Diagonal ball asset
+                    break;
+                case 3: // Bottom-right
+                    x = 0;
+                    y = 0;
+                    velocityX = this.BALL_SPEED;
+                    velocityY = this.BALL_SPEED;
+                    ballType = 'ball-diagonal'; // Diagonal ball asset
+                    break;
+            }
+        } else {
+            // Standard edge spawning
+            switch (edge) {
+                case 0: // Top edge
+                    x = Phaser.Math.Between(0, width);
+                    y = 0;
+                    velocityX = 0;
+                    velocityY = this.BALL_SPEED;
+                    ballType = 'ball'; // Standard ball asset
+                    break;
+                case 1: // Bottom edge
+                    x = Phaser.Math.Between(0, width);
+                    y = height;
+                    velocityX = 0;
+                    velocityY = -this.BALL_SPEED;
+                    ballType = 'ball'; // Standard ball asset
+                    break;
+                case 2: // Left edge
+                    x = 0;
+                    y = Phaser.Math.Between(0, height);
+                    velocityX = this.BALL_SPEED;
+                    velocityY = 0;
+                    ballType = 'ball2'; // Standard ball asset
+                    break;
+                case 3: // Right edge
+                    x = width;
+                    y = Phaser.Math.Between(0, height);
+                    velocityX = -this.BALL_SPEED;
+                    velocityY = 0;
+                    ballType = 'ball2'; // Standard ball asset
+                    break;
+            }
         }
-
-        let ball = this.balls.create(x, y, 'ball');
+        let ball = this.balls.create(x, y, ballType);
         ball.setVelocity(velocityX, velocityY);
         ball.setCollideWorldBounds(false);
-        ball.setScale(1.5);
+        ball.setScale(.2);
     }
 
     increaseBallSpeed() {
