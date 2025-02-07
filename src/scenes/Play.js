@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
     init() {
         this.PLAYER_VELOCITY = 350
         this.BALL_SPEED = 200;
+        this.BALL_SPEED_INCREMENT = 50;
     }
 
     create() {
@@ -70,8 +71,9 @@ class Play extends Phaser.Scene {
 
             this.balls = this.physics.add.group();
             this.time.addEvent({ delay: 1000, callback: this.spawnBall, callbackScope: this, loop: true });
-            //If player touches ball
-            this.physics.add.overlap(this.player, this.balls, this.gameOver, null, this); 
+            this.physics.add.overlap(this.player, this.balls, this.gameOver, null, this); //If player touches ball
+
+            this.time.addEvent({delay: 5000, callback: this.increaseBallSpeed, callbackScope: this,loop: true}); //calls increaseBallSpeed
     }
 
     spawnBall() {
@@ -109,6 +111,10 @@ class Play extends Phaser.Scene {
         ball.setVelocity(velocityX, velocityY);
         ball.setCollideWorldBounds(false);
         ball.setScale(1.5);
+    }
+
+    increaseBallSpeed() {
+        this.BALL_SPEED += this.BALL_SPEED_INCREMENT; // Increase ball speed
     }
 
 
