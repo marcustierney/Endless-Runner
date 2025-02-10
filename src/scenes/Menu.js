@@ -8,7 +8,7 @@ class Menu extends Phaser.Scene {
         this.load.image('background', './assets/background.png')
         this.load.image('ball', './assets/ball.png')
         this.load.image('ball2', './assets/ball2.png')
-        this.load.image('ball3', './assets/ball3.png')
+        this.load.image('big-ball', './assets/big-ball.png')
         this.load.image('ball-diagonal', './assets/ball-diagonal.png')
         this.load.spritesheet('character', './assets/Character_002.png', {
             frameWidth: 48
@@ -39,7 +39,8 @@ class Menu extends Phaser.Scene {
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)       
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)     
+        keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC) 
     }
     update() {
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
