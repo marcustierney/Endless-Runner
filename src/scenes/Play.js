@@ -9,6 +9,7 @@ class Play extends Phaser.Scene {
         this.BALL_SPEED_INCREMENT = 50;
         this.ISPAUSED = false;
         this.ballVelocities = []; // To store each ball's velocity when paused
+        this.elapsedTime = 0;  // Time counter in seconds
     }
 
     create() {
@@ -78,11 +79,29 @@ class Play extends Phaser.Scene {
 
             this.time.addEvent({delay: 5000, callback: this.increaseBallSpeed, callbackScope: this,loop: true}); //calls increaseBallSpeed
 
-            this.pauseText = this.add.text(width / 2, height / 2, 'PAUSED', {
+            this.pauseText = this.add.text(width / 2, height / 2, 'PAUSED', { //Pause text
                 fontSize: '48px',
                 fill: '#fff',
                 fontStyle: 'bold',
             }).setOrigin(0.5).setVisible(false);
+
+            this.timeText = this.add.text(width / 2, 16, 'Time: 0', { //Timer text
+                fontSize: '32px',
+                fill: '#fff',
+                fontStyle: 'bold',
+            }).setOrigin(0.5, 0);
+
+            this.timeEvent = this.time.addEvent({
+                delay: 1000, // 1000 ms = 1 second
+                callback: this.updateTime,
+                callbackScope: this,
+                loop: true
+            });
+    }
+
+    updateTime() {
+        this.elapsedTime++;  // Increment time counter
+        this.timeText.setText('Time: ' + this.elapsedTime);  // Update the text with the new time
     }
 
     spawnBall() {
@@ -195,13 +214,13 @@ class Play extends Phaser.Scene {
         ball.setVelocity(velocityX, velocityY);
         ball.setCollideWorldBounds(false);
         if (ballType === 'big-ball') {
-            ball.setScale(.6);
+            ball.setScale(1.7);
         }
         else if (ballType === 'ball-diagonal') {
-            ball.setScale(.1);
+            ball.setScale(.8);
         }
         else {
-            ball.setScale(.2);
+            ball.setScale(.9);
         }
         this.ballVelocities.push({ ball: ball, velocity: ball.body.velocity.clone() }); // Store ball velocity
     }
@@ -303,6 +322,9 @@ class Play extends Phaser.Scene {
         // Determine movement state
         let playerMovement = 'walk'; // Always walking
         this.player.play(playerMovement + '-' + this.lastDirection, true);
+
+        // Update background position to create the looping effect
+        this.background.tilePositionX += 1; 
 
         this.balls.children.iterate((ball) => {
             if (ball && ball.active) {  // Ensure ball exists before accessing properties
