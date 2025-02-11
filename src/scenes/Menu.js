@@ -17,7 +17,14 @@ class Menu extends Phaser.Scene {
             frameWidth: 48
         })
         // load audio
-        this.load.audio('sfx-select', './assets/sfx-select.wav')
+        this.load.audio('background-music', './assets/background-music.wav')
+        this.load.audio('play-music', './assets/play-music.wav')
+        this.load.audio('gameover', './assets/gameover.wav')
+        this.load.audio('moo', './assets/moo.wav')
+        this.load.audio('neigh', './assets/neigh.wav')
+        this.load.audio('oink', './assets/oink.wav')
+        this.load.audio('cluck', './assets/cluck.wav')
+        
     }
     
 
@@ -26,7 +33,7 @@ class Menu extends Phaser.Scene {
             fontFamily: 'Courier',
             fontSize: '70px',
             fontStyle: 'bold',
-            color: '#843605',
+            color: '#000000',
             align: 'right',
             fixedWidth: 0
         }
@@ -34,7 +41,7 @@ class Menu extends Phaser.Scene {
             fontFamily: 'Courier',
             fontSize: '20px',
             fontStyle: 'bold',
-            color: '#843605',
+            color: '#000000',
             align: 'right',
             fixedWidth: 0
         }
@@ -46,7 +53,7 @@ class Menu extends Phaser.Scene {
         this.add.text(185, 190, 'Start Game', tutorialConfig).setOrigin(0.5)
         this.add.text(410, 190, 'Pause Game', tutorialConfig).setOrigin(0.5)
         this.add.text(640, 190, 'Move Character', tutorialConfig).setOrigin(0.5)
-        this.add.text(game.config.width/2, game.config.height/2, 'FARM ATTACK', menuConfig).setOrigin(0.5)
+        this.add.text(game.config.width/2, 700, 'FARM ATTACK', menuConfig).setOrigin(0.5)
         menuConfig.backgroundColor = '#00FF00'
         menuConfig.color = '#000'
         // define keys
@@ -54,10 +61,17 @@ class Menu extends Phaser.Scene {
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)     
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC) 
+        //play music
+        this.music = this.sound.add('background-music', { 
+            volume: 0.5, // Adjust volume (0.0 to 1.0)
+            loop: true // Loop the music
+        });
+        this.music.play();
     }
     update() {
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
           // play
+          this.music.stop(); 
           this.scene.start('playScene')    
         }
       }

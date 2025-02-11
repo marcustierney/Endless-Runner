@@ -17,7 +17,8 @@ class Play extends Phaser.Scene {
             this.background = this.add.tileSprite(0, 0, 800, 800, 'background').setOrigin(0, 0)
             //Add normalized sprite movement
             this.player = this.physics.add.sprite(width / 2, height / 2, 'character', 1).setScale(2)
-            this.player.body.setCollideWorldBounds(true)
+            this.player.body.setCollideWorldBounds(true) 
+            this.player.body.onWorldBounds = true; // Triggers bounce logic
             this.player.body.setSize(32, 32).setOffset(8, 16)
     
             this.anims.create({
@@ -97,11 +98,16 @@ class Play extends Phaser.Scene {
                 callbackScope: this,
                 loop: true
             });
+            this.music = this.sound.add('play-music', { 
+                volume: 0.5, // Adjust volume (0.0 to 1.0)
+                loop: true // Loop the music
+            });
+            this.music.play();
     }
 
     updateTime() {
         this.elapsedTime++;  // Increment time counter
-        this.timeText.setText('Time: ' + this.elapsedTime);  // Update the text with the new time
+        this.timeText.setText('Points: ' + this.elapsedTime);  // Update the text with the new time
     }
 
     spawnBall() {
@@ -214,14 +220,24 @@ class Play extends Phaser.Scene {
         ball.setVelocity(velocityX, velocityY);
         ball.setCollideWorldBounds(false);
         if (ballType === 'big-ball') {
-            ball.setScale();
+            ball.setScale(1.5);
+            this.sound.play('oink');
         }
         else if (ballType === 'ball-diagonal') {
-            ball.setScale(.3);
+            ball.setScale(.9);
+            this.sound.play('neigh', { volume: 3.0 });
+        }
+        else if (ballType === 'ball2') {
+            ball.setScale(.8);
+            this.sound.play('cluck');
         }
         else {
-            ball.setScale(.4);
+            ball.setScale(.8);
+            this.sound.play('moo');
         }
+        //Sound effects
+
+
         this.ballVelocities.push({ ball: ball, velocity: ball.body.velocity.clone() }); // Store ball velocity
     }
 
@@ -235,6 +251,7 @@ class Play extends Phaser.Scene {
         if (this.ISPAUSED) {
             // Pause the game (no updates should happen)
             this.time.paused = true;  // Pause the timer events as well
+            this.music.pause();
             this.player.setVelocity(0, 0);
 
             // Store all ball velocities
@@ -260,11 +277,12 @@ class Play extends Phaser.Scene {
             // Clear the ball velocities list once resumed
             this.ballVelocities = [];
             this.pauseText.setVisible(false);
+            this.music.resume();
 
         }
     }
 
-    update() { //Continuous movement
+    update() { 
         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
             this.togglePause();
         }
@@ -315,6 +333,7 @@ class Play extends Phaser.Scene {
         }
         // Apply velocity
         this.player.setVelocity(this.PLAYER_VELOCITY * playerVector.x, this.PLAYER_VELOCITY * playerVector.y);
+
         // Determine movement state
         let playerMovement = 'walk'; // Always walking
         this.player.play(playerMovement + '-' + this.lastDirection, true);
@@ -331,8 +350,10 @@ class Play extends Phaser.Scene {
         });
     }
 
+
     gameOver() {
-        //this.scene.restart();
+        this.music.stop(); 
+        this.sound.play('gameover'); 
         this.scene.start('overScene', { finalScore: this.elapsedTime });
     }    
 }

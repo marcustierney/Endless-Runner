@@ -8,10 +8,10 @@ let config = {
     physics: {
       default: 'arcade',
       arcade: {
-          debug: true,
+          debug: false,
       } 
     },
-    scene: [Menu, Play, Over]
+    scene: [Menu, Play, Over, Credits]
   }
 
 let game = new Phaser.Game(config)
@@ -24,4 +24,4 @@ let borderUISize = game.config.height / 15
 let borderPadding = borderUISize / 3
 
 // reserve keyboard bindings
-let keyFIRE, keyRESET, keyLEFT, keyRIGHT, keySPACE, keyESC, keyR, keyM
+let keyFIRE, keyRESET, keyLEFT, keyRIGHT, keySPACE, keyESC, keyR, keyM, keyC

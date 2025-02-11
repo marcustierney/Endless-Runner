@@ -32,7 +32,7 @@ class Over extends Phaser.Scene {
             color: '#FF0000' 
         }).setOrigin(0.5);
 
-        this.add.text(game.config.width / 2, 150, this.finalScore  + ' seconds', { 
+        this.add.text(game.config.width / 2, 150, this.finalScore  + ' Points', { 
             fontFamily: 'Courier', 
             fontSize: '32px', 
             fontStyle: 'bold', 
@@ -48,19 +48,20 @@ class Over extends Phaser.Scene {
         }).setOrigin(0.5);
 
         // Display the highest score
-        this.add.text(game.config.width / 2, 250, this.highScore + ' seconds', { 
+        this.add.text(game.config.width / 2, 250, this.highScore + ' Points', { 
             fontFamily: 'Courier', 
             fontSize: '32px', 
             fontStyle: 'bold', 
             color: '#FFFFFF' 
         }).setOrigin(0.5);
 
-
         this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', overConfig).setOrigin(0.5)
         this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart', overConfig).setOrigin(0.5)
         this.add.text(game.config.width/2, game.config.height/2 + 128, 'Press (M) for Menu', overConfig).setOrigin(0.5)
+        this.add.text(game.config.width/2, game.config.height/2 + 192, 'Press (C) for Credits', overConfig).setOrigin(0.5)
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M)
+        keyC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C)
     }
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyR)) {
@@ -68,6 +69,9 @@ class Over extends Phaser.Scene {
         }
         if (Phaser.Input.Keyboard.JustDown(keyM)) {
             this.scene.start('menuScene')
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyC)) {
+            this.scene.start('creditScene')
         }
     }
 }
