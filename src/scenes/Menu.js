@@ -63,14 +63,13 @@ class Menu extends Phaser.Scene {
         keyESC = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC) 
         //play music
         this.music = this.sound.add('background-music', { 
-            volume: 0.5, // Adjust volume (0.0 to 1.0)
-            loop: true // Loop the music
+            volume: 0.5, 
+            loop: true 
         });
         this.music.play();
     }
     update() {
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-          // play
           this.music.stop(); 
           this.scene.start('playScene')    
         }
