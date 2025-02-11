@@ -214,13 +214,13 @@ class Play extends Phaser.Scene {
         ball.setVelocity(velocityX, velocityY);
         ball.setCollideWorldBounds(false);
         if (ballType === 'big-ball') {
-            ball.setScale(1.7);
+            ball.setScale();
         }
         else if (ballType === 'ball-diagonal') {
-            ball.setScale(.8);
+            ball.setScale(.3);
         }
         else {
-            ball.setScale(.9);
+            ball.setScale(.4);
         }
         this.ballVelocities.push({ ball: ball, velocity: ball.body.velocity.clone() }); // Store ball velocity
     }
@@ -234,7 +234,6 @@ class Play extends Phaser.Scene {
 
         if (this.ISPAUSED) {
             // Pause the game (no updates should happen)
-            console.log('paused');
             this.time.paused = true;  // Pause the timer events as well
             this.player.setVelocity(0, 0);
 
@@ -249,7 +248,6 @@ class Play extends Phaser.Scene {
 
         } else {
             // Resume the game
-            console.log('resumed');
             this.time.paused = false; // Resume the timer events
 
             
@@ -269,7 +267,6 @@ class Play extends Phaser.Scene {
     update() { //Continuous movement
         if (Phaser.Input.Keyboard.JustDown(keyESC)) {
             this.togglePause();
-            console.log(this.ISPAUSED)
         }
 
         if (this.ISPAUSED) {
@@ -277,7 +274,6 @@ class Play extends Phaser.Scene {
         }
        
 
-        // if (this.ISPAUSED) return; // Stop updates when paused
 
         let playerVector = new Phaser.Math.Vector2(0, 0)
         // Check for input and update last direction
@@ -336,7 +332,8 @@ class Play extends Phaser.Scene {
     }
 
     gameOver() {
-        this.scene.restart();
+        //this.scene.restart();
+        this.scene.start('overScene', { finalScore: this.elapsedTime });
     }    
 }
 
